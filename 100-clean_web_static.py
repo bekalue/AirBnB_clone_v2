@@ -82,11 +82,14 @@ def do_clean(number=0):
     Args:
         number (int, optional): number of archives to keep. Defaults to 0.
     """
+    number = int(number)
     if number == 0 or number == 1:
         number = 1
     number += 1
-    num = str(number)
-    with lcd("versions/"):
-        local("ls -1t | grep *\.tgz | tail -n +" + num + " | xargs -I {} rm -- {}")
-    with cd("/data/web_static/releases/"):
-        run("ls -1t | grep web_static_ | tail -n +" + num + " | xargs -I {} rm -rf -- {}")
+    sn = str(number)
+    with lcd("versions"):
+        local("ls -1t | grep web_static_.*\.tgz | tail -n +" +
+              sn + " | xargs -I {} rm -- {}")
+    with cd("/data/web_static/releases"):
+        run("ls -1t | grep web_static_ | tail -n +" +
+            sn + " | xargs -I {} rm -rf -- {}")
