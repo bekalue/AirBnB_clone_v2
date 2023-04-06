@@ -7,6 +7,7 @@ from datetime import datetime
 import os
 
 env.hosts = ["34.201.174.75", "54.209.36.60"]
+env.user = "ubuntu"
 
 
 def do_pack():
@@ -81,19 +82,11 @@ def do_clean(number=0):
     Args:
         number (int, optional): number of archives to keep. Defaults to 0.
     """
-    num = int(number) if number > 0 else 1
-    larchives = sorted(os.listdir("versions/"), reverse=True)
-    if num < len(larchives):
-        larchives = larchives[num:]
-    else:
-        larchives = []
-    for archive in larchives:
-        os.unlink("rm versions/{}".format(archive))
-
-    command = [
-        "rm -rf $(",
-        "find /data/web_static/releases/ -maxdepth 1 -type d -iregex",
-        " '/data/web_static/releases/web_static_.*'",
-        " | sort -r | tr '\\n' ' ' | cut -d ' ' -f{}-)".format(num + 1)
-    ]
-    run(''.join(command))
+    if number == 0 or number == 1:
+        number = 1
+    number += 1
+    num = str(number)
+    with lcd("versions/"):
+        local("ls -1t | grep *\.tgz | tail -n +" + num + " | xargs -I {} rm -- {}")
+    with cd("/data/web_static/releases/"):
+        run("ls -1t | grep web_static_ | tail -n +" + num + " | xargs -I {} rm -rf -- {}")
