@@ -88,7 +88,7 @@ def do_clean(number=0):
     number += 1
     sn = str(number)
     with lcd("versions"):
-        local("ls -1t | grep web_static_.*\.tgz | tail -n +" +
+        local("ls -1t | grep web_static_.*.tgz | tail -n +" +
               sn + " | xargs -I {} rm -- {}")
     with cd("/data/web_static/releases"):
         run("ls -1t | grep web_static_ | tail -n +" +
