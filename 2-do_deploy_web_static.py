@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """ Fabric script that distributes an archive to web servers """
-from fabric.api import env, local, put, run
+from fabric.api import *
 from datetime import datetime
 import os
 
 env.hosts = ["34.201.174.75", "54.209.36.60"]
+env.user = "ubuntu"
 
 
 def do_pack():
@@ -43,8 +44,10 @@ def do_deploy(archive_path):
     """
     if not os.path.exists(archive_path):
         return False
+    res = []
     try:
-        put(archive_path, '/tmp/')
+        result = put(archive_path, '/tmp/')
+        res.append(result.succeeded)
         archive = archive_path.split('/')[-1]
         archive_name = archive.split('.')[0]
         run('mkdir -p /data/web_static/releases/{}/'.format(archive_name))
