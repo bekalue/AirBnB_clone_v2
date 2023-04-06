@@ -3,7 +3,7 @@
 
 # updating the sys
 exec {'update':
-  command => 'sudo /usr/bin/apt-get update',
+  command => 'apt-get update',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
 }
 
@@ -15,14 +15,14 @@ package {'nginx':
 
 # creating folder for static files
 exec {'create_folder':
-  command => 'sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared',
+  command => 'mkdir -p /data/web_static/releases/test/ /data/web_static/shared',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
   require => Package['nginx'],
 }
 
 # changing owner of the folder
 exec {'change_owner':
-  command => 'sudo chown -R ubuntu:ubuntu /data/',
+  command => 'chown -R ubuntu:ubuntu /data/',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
   require => Exec['create_folder'],
 }
@@ -36,16 +36,16 @@ file {'/data/web_static/releases/test/index.html':
 
 # remove the symbolic link
 exec {'remove_symlink':
-  command => 'sudo rm -rf /data/web_static/current',
+  command => 'rm -rf /data/web_static/current',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
   require => File['/data/web_static/releases/test/index.html'],
 }
 
 # creating symlink
 exec {'create_symlink':
-  command => 'sudo ln -sf /data/web_static/releases/test/ /data/web_static/current',
+  command => 'ln -sf /data/web_static/releases/test/ /data/web_static/current',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-  require => File['/data/web_static/releases/test/index.html'], Exec['remove_symlink'],
+  require => File['/data/web_static/releases/test/index.html'], Exec['remove_symlink']
 }
 
 # creating the config folder
@@ -104,15 +104,15 @@ file { '/etc/nginx/sites-available/default':
 
 # enable site
 exec { 'enable_site':
-  command => 'sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default',
+  command => 'ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
   require => File['/etc/nginx/sites-available/default'],
 }
 
 # restart nginx
 exec { 'restart_nginx':
-  command => 'sudo service nginx restart',
+  command => 'service nginx restart',
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-  require => Exec['enable_site'],
+  require => Exec['enable_site']
 }
 Exec['restart_nginx']
