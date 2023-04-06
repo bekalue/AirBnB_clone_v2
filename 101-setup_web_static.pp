@@ -1,20 +1,114 @@
 #!/usr/bin/puppet apply
 # Redone the task #0 but by using Puppet
-exec { '/usr/bin/env apt-get -y update' : }
--> exec { '/usr/bin/env apt-get -y install nginx' : }
--> exec { '/usr/bin/env mkdir -p /data/web_static/releases/test/' : }
--> exec { '/usr/bin/env mkdir -p /data/web_static/shared/' : }
--> exec { '/usr/bin/env chown -R ubuntu:ubuntu /data/' : }
--> exec { '/usr/bin/env sed -i "/listen \[::\]:80 default_server/ a\\\trewrite ^/redirect_me https://google.com permanent;" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env sed -i "/listen \[::\]:80 default_server/ a\\\tadd_header X-Served-By \"\$HOSTNAME\";" \
-/etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env sed -i "/redirect_me/ a\\\terror_page 404 /404.html;" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env mkdir -p /var/www/error/' : }
--> exec { '/usr/bin/env # echo "Ceci n\'est pas une page" > /var/www/error/404.html' : }
--> exec { '/usr/bin/env sed -i "/listen \[::\]:80 default_server/ a\\\tlocation /404.html {\n\t\troot /var/www/error/;\n\t}" \
--> exec { '/usr/bin/env echo "Hello World!" > /data/web_static/releases/test/index.html' : }
--> exec { '/usr/bin/env ln -sf /data/web_static/releases/test/ /data/web_static/current' : }
--> exec { '/usr/bin/env sed -i "/^\tlocation \/ {$/ i\\\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\
-\n\t\tautoindex off;\n}" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env service nginx start' : }
+
+$file = "<!DOCTYPE html>
+<html lang=\"en\">
+	<head>
+		<meta charset=\"UTF-8\">
+		<title>AirBnB clone - Web static</title>
+	</head>
+	<body>
+		<h1>AirBnB clone - Web static</h1>
+	</body>
+</html>"
+
+$config = "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By \$HOSTNAME;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    error_page 404 /404.html;
+    location = /404.html {
+        root /var/www/error/;
+        internal;
+    }
+
+    location /hbnb_static/ {
+        alias /data/web_static/current/;
+        index index.html;
+    }
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}
+"
+
+exec { 'apt-get update':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
+}
+
+-> package { 'nginx':
+  ensure   => 'present',
+  provider => 'apt'
+}
+
+-> file { '/data':
+  ensure  => 'directory'
+}
+
+-> file { '/data/web_static':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases/test':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/shared':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases/test/index.html':
+  ensure  => 'present',
+  content => "this webpage is found in data/web_static/releases/test/index.htm \n"
+}
+
+-> file { '/data/web_static/current':
+  ensure => 'link',
+  target => '/data/web_static/releases/test'
+}
+
+-> exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
+}
+
+file { '/var/www':
+  ensure => 'directory'
+}
+
+-> file { '/var/www/html':
+  ensure => 'directory'
+}
+
+-> file { '/var/www/html/index.html':
+  ensure  => 'present',
+  content => $file
+}
+
+-> file { '/var/www/error':
+  ensure => 'directory'
+}
+
+-> file { '/var/www/error/404.html':
+  ensure  => 'present',
+  content => "Ceci n'est pas une page\n"
+}
+
+-> file { '/etc/nginx/sites-available/default':
+  ensure  => 'present',
+  content => $config
+}
+
+-> exec { 'nginx restart':
+  path => '/etc/init.d/'
+}
 
