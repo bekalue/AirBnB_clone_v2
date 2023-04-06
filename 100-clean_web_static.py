@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-#!/usr/bin/python3
 """ Fabric script that distributes an archive to web servers
     and deletes out-of-date archives, using the function do_clean
 """
@@ -90,7 +89,7 @@ def do_clean(number=0):
         larchives = []
     for archive in larchives:
         os.unlink("rm versions/{}".format(archive))
-    
+
     command = [
         "rm -rf $(",
         "find /data/web_static/releases/ -maxdepth 1 -type d -iregex",
