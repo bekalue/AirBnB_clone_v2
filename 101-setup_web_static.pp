@@ -69,7 +69,7 @@ exec { 'apt-get update':
 
 -> file { '/data/web_static/releases/test/index.html':
   ensure  => 'present',
-  content => "this webpage is found in data/web_static/releases/test/index.htm \n"
+  content => $file
 }
 
 -> file { '/data/web_static/current':
