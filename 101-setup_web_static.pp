@@ -115,3 +115,4 @@ exec { 'restart_nginx':
   path    => '/usr/bin:/bin:/usr/sbin:/sbin',
   require => Exec['enable_site'],
 }
+Exec['restart_nginx']
