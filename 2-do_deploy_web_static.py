@@ -4,6 +4,7 @@ from fabric.api import *
 from datetime import datetime
 import os
 
+env.hosts = ["34.201.174.75", "54.209.36.60"]
 
 def do_pack():
     """Function that generates a .tgz archive from the contents of the
