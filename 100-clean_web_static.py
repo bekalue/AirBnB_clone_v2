@@ -81,7 +81,7 @@ def do_clean(number=0):
     Args:
         number (int, optional): number of archives to keep. Defaults to 0.
     """
-    num = int(number) if number else 1
+    num = int(number) if number > 0 else 1
     larchives = sorted(os.listdir("versions/"), reverse=True)
     if num < len(larchives):
         larchives = larchives[num:]
