@@ -84,7 +84,7 @@ exec { 'apt-get update':
 
 file { '/var/www':
   ensure => 'directory',
-  mode    => '0755'
+  mode   => '0755'
 }
 
 -> file { '/var/www/html':
