@@ -48,7 +48,8 @@ exec { 'apt-get update':
 }
 
 -> file { '/data':
-  ensure  => 'directory'
+  ensure  => 'directory',
+  replace => true
 }
 
 -> file { '/data/web_static':
@@ -77,12 +78,13 @@ exec { 'apt-get update':
   target => '/data/web_static/releases/test'
 }
 
--> exec { 'chown -R ubuntu:ubuntu /data/':
+-> exec { 'chown -hR ubuntu:ubuntu /data':
   path => '/usr/bin/:/usr/local/bin/:/bin/'
 }
 
 file { '/var/www':
-  ensure => 'directory'
+  ensure => 'directory',
+  mode    => '0755'
 }
 
 -> file { '/var/www/html':
