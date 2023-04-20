@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This is the state class"""
+"""This module contains the state class"""
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Column, String
@@ -26,5 +26,5 @@ class State(BaseModel, Base):
             """returns list of City instances with state_id"""
             from models import storage
             from models import City
-            return [v for k, v in storage.all(City).items()
-                    if v.state_id == self.id]
+            return [j for i, j in storage.all(City).items()
+                    if j.state_id == self.id]
