@@ -54,6 +54,9 @@ class FileStorage:
 
     def save(self):
         """serialize the file path to JSON file path
+
+        Args:
+            obj: given object
         """
         my_dict = {}
         for key, value in self.__objects.items():
@@ -63,6 +66,9 @@ class FileStorage:
 
     def reload(self):
         """serialize the file path to JSON file path
+
+        Args:
+            obj: given object
         """
         try:
             with open(self.__file_path, 'r', encoding="UTF-8") as f:
@@ -73,5 +79,6 @@ class FileStorage:
             pass
 
     def close(self):
-        """Thread specific storage"""
+        """reload json
+        """
         self.reload()
