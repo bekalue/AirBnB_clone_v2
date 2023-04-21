@@ -18,17 +18,17 @@ def states(id=None):
     state = None
     states = list(storage.all(State).values())
     case = 404
-    if id is None:
+    if id:
+        match = list(filter(lambda x: x.id == id, states))
+        if len(match) > 0:
+            state = match[0]
+            state.cities.sort(key=lambda x: x.name)
+            case = 1
+    elif id is None:
         case = 2
         states.sort(key=lambda y: y.name)
         for state in states:
             state.cities.sort(key=lambda y: y.name)
-    else:
-        res = list(filter(lambda x: x.id == id, states))
-        if len(res) > 0:
-            state = res[0]
-            state.cities.sort(key=lambda x: x.name)
-            case = 1
     vars = {
             'states': states,
             'state': state,
