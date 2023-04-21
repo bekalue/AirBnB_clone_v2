@@ -11,6 +11,7 @@ from models.review import Review
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base, BaseModel
 
+
 class DBStorage():
     """Class for database storage"""
     __engine = None
@@ -28,8 +29,6 @@ class DBStorage():
 
     def all(self, cls=None):
         """returns all objects of cls"""
-        
-
         class_list = [
             State,
             City,
