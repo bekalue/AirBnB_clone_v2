@@ -29,7 +29,7 @@ def hbnb_filters():
 
 
 @app.teardown_appcontext
-def flask_teardown(exc):
+def flask_app_teardown(exec):
     '''The Flask app/request context end event listener.'''
     storage.close()
 

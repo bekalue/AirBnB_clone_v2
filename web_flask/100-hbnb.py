@@ -14,7 +14,7 @@ app.url_map.strict_slashes = False
 
 
 @app.route('/hbnb')
-def hbnb():
+def hbnb_page():
     '''The full hbnb page.'''
     all_states = list(storage.all(State).values())
     amenities = list(storage.all(Amenity).values())
@@ -35,7 +35,7 @@ def hbnb():
 
 
 @app.teardown_appcontext
-def flask_teardown(exc):
+def flask_app_teardown(exec):
     '''The Flask app/request context end event listener.'''
     storage.close()
 
