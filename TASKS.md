@@ -1,6 +1,13 @@
 # 0x02. AirBnB clone - MySQL
->
 > Project done in 5 days
+
+![Python](https://img.shields.io/badge/-Python-green)
+![back](https://img.shields.io/badge/-Back--end-lightgrey)
+![oop](https://img.shields.io/badge/OOP-yellowgreen)
+![sql](https://img.shields.io/badge/SQL-violet)
+![mysql](https://img.shields.io/badge/MySQL-purple)
+![orm](https://img.shields.io/badge/ORM-silver)
+![sqlalchemy](https://img.shields.io/badge/SQLAlchemy-violet)
 
 ## Background Context
 
